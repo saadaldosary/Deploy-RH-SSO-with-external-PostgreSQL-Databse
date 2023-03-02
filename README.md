@@ -1,4 +1,4 @@
-# Deploy SSO in OpenShift with an external PostgreSQL database 
+# Deploy-RH-SSO-Openshift-Operator-with-external-PostgreSQL-Databse 
 #### Prerequisites:
  - [ ] Installed Openshift cluster up and running 
  - [ ] External Postgres database with the following configuration:
