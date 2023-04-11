@@ -1,0 +1,42 @@
+batch
+
+
+set DB_USERNAME=<db_username>
+set DB_PASSWORD=<db_password>
+set DRIVER_NAME=postgres
+set DRIVER_MODULE_NAME=org.postgres
+set XA_DATABASESOURCE_CLASS="org.postgresql.xa.PGXADataSource"
+set CONNECTION_URL="jdbc:postgresql://<postgres_ip>:5432/keycloak"
+set FILE=<postgresql-jar-path>
+
+embed-server --std-out=echo
+
+module add --name=$DRIVER_MODULE_NAME --resources=$FILE --dependencies=javax.api,javax.resource.api
+
+/subsystem=datasources/jdbc-driver=$DRIVER_NAME:add( \
+  driver-name=$DRIVER_NAME, \
+  driver-module-name=$DRIVER_MODULE_NAME, \
+  xa-datasource-class=$XA_DATABASESOURCE_CLASS \
+)
+
+/subsystem=datasources/data-source=KeycloakDS:remove()
+/subsystem=datasources/data-source=KeycloakDS:add( \
+  jndi-name=java:jboss/datasources/KeycloakDS, \
+  enabled=true, \
+  use-java-context=true, \
+  connection-url=$CONNECTION_URL, \
+  driver-name=$DRIVER_NAME, \
+  user-name=$DB_USERNAME, \
+  password=$DB_PASSWORD \
+)
+
+/subsystem=elytron/key-store=httpsKS:add(path="/home/rhsso/sso.lab.example.com.p12",credential-reference={clear-text=redhat123},type=PKCS12)
+/subsystem=elytron/key-manager=httpsKM:add(key-store=httpsKS,credential-reference={clear-text=redhat123})
+/subsystem=elytron/server-ssl-context=httpsSSC:add(key-manager=httpsKM,protocols=["TLSv1.2", "TLSv1.3"])
+/subsystem=elytron/server-ssl-context=httpsSSC:write-attribute(name=cipher-suite-names,value=TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256)
+/subsystem=undertow/server=default-server/https-listener=https:undefine-attribute(name=security-realm)
+/subsystem=undertow/server=default-server/https-listener=https:write-attribute(name=ssl-context,value=httpsSSC)
+/socket-binding-group=standard-sockets/socket-binding=http:write-attribute(name=port, value=8443)
+/socket-binding-group=standard-sockets/socket-binding=https:write-attribute(name=port, value=8080)
+
+run-batch
