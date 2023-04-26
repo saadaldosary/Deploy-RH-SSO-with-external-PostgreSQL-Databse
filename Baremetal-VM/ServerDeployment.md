@@ -67,11 +67,11 @@
 
 
 **Add Postgres Module and Driver**
-6. Find the sso-extension.cli script in this repo
-7. Copy and Paste sso-extension.cli script to your SSO instance:
+1. Find the sso-extension.cli script in this repo
+2. Copy and Paste sso-extension.cli script to your SSO instance:
 `vim /opt/rh-sso-7.6/bin/sso-extension.cli`
-8. Fill up the script file according to your setup. 
-9. Run sso-extension.cli:
+3. Fill up the script file according to your setup. 
+4. Run sso-extension.cli:
 `bin/jboss-cli.sh --file=/opt/rh-sso-7.6/bin/sso-extensions.cli` 
 
 
