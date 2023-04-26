@@ -30,7 +30,7 @@ sudo chkconfig jboss-eap-rhel.sh on
 
 ##### Procedure: 
 1. In the Postgresql server: 
-
+```
     sudo -i 
     su postgres
     psql 
@@ -39,13 +39,15 @@ sudo chkconfig jboss-eap-rhel.sh on
     alter user rhsso with password 'password';
     grant all on database keycloakdb TO rhsso;
     \q 
-    exit 
+    exit
+```
+ 
      
 2. Allow external access to keycloakdb: 
-
+```
     vim /var/lib/postgresql/data/pg_hba.conf
     #At the bottom of the page, add external connection to keycloakdb 
     host    keycloakdb             rhsso             < SSO-Server-IP >/32            md5
     save and exit
     systemctl restart postgresql-server.service 
-     
+```
