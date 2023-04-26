@@ -54,7 +54,7 @@
 `vim /opt/rh-sso-7.6/modules/system/layers/keycloak/org/postgresql/main/module.xml`
 ```
 <?xml version="1.0" encoding="UTF-8"?>
-	<module xmlns="urn:jboss:module:1.3" name="org.postgres">
+<module xmlns="urn:jboss:module:1.3" name="org.postgres">
 		<resources>
 			<resource-root path="<JAR FILE NAME>"/>
 		</resources>
